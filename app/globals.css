@@ -3,21 +3,30 @@
 @tailwind utilities;
 
 :root {
-  --background: #05070d;
-  --foreground: #f8fafc;
+  --deep-navy: #070b1a;
+  --navy-raise: #0c1226;
+  --navy-card: #101833;
+  --primary-blue: #2563eb;
+  --bright-blue: #3b82f6;
+  --light-blue: #60a5fa;
+  --cyan: #06b6d4;
+  --white: #ffffff;
+  --slate: #94a3b8;
+  --line: rgba(148, 163, 184, 0.16);
+  --grad: linear-gradient(135deg, var(--primary-blue), var(--bright-blue) 55%, var(--cyan));
 }
 
 html {
-  background-color: var(--background);
-  color: var(--foreground);
+  background-color: var(--deep-navy);
+  color: var(--white);
   color-scheme: dark;
 }
 
 body {
-  background-color: #05070d;
-  color: #f8fafc;
+  background-color: var(--deep-navy);
+  color: var(--white);
   overflow-x: hidden;
-  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  font-family: var(--font-poppins), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
 /* Custom Scrollbar */
@@ -25,14 +34,14 @@ body {
   width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #05070d;
+  background: #070b1a;
 }
 ::-webkit-scrollbar-thumb {
   background: #1e293b;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #06b6d4;
+  background: #3b82f6;
 }
 
 /* Lenis smooth scrolling rules */
@@ -54,12 +63,17 @@ html.lenis, html.lenis body {
 
 /* Selection */
 ::selection {
-  background: rgba(6, 182, 212, 0.3);
+  background: rgba(37, 99, 235, 0.35);
   color: #ffffff;
 }
 
-/* Noise overlay */
-.bg-noise {
-  background-image: radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px);
-  background-size: 24px 24px;
+/* Brand Gradient Utilities */
+.text-brand-grad {
+  background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 50%, #06b6d4 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.bg-brand-grad {
+  background: linear-gradient(135deg, #2563eb 0%, #3b82f6 55%, #06b6d4 100%);
 }

@@ -1,10 +1,11 @@
 import React from "react";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
-import Comparison from "@/components/Comparison";
 import ServicePatterns from "@/components/ServicePatterns";
+import PostSprintSpotlight from "@/components/PostSprintSpotlight";
+import Comparison from "@/components/Comparison";
+import RecentWork from "@/components/RecentWork";
 import SprintRoadmap from "@/components/SprintRoadmap";
-import PricingOffers from "@/components/PricingOffers";
 import AuditBooking from "@/components/AuditBooking";
 import FAQ from "@/components/FAQ";
 import Footer from "@/components/Footer";
@@ -15,10 +16,11 @@ export default function Home() {
       <Navbar />
       <main className="flex-grow">
         <Hero />
-        <Comparison />
         <ServicePatterns />
+        <PostSprintSpotlight />
+        <Comparison />
+        <RecentWork />
         <SprintRoadmap />
-        <PricingOffers />
         <AuditBooking />
         <FAQ />
       </main>

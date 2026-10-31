@@ -20,7 +20,7 @@ export default function CanvasBackground() {
       y: height / 2,
       targetX: width / 2,
       targetY: height / 2,
-      radius: 180,
+      radius: 170,
     };
 
     const handleResize = () => {
@@ -52,22 +52,23 @@ export default function CanvasBackground() {
 
     let particles: Particle[] = [];
 
+    // Exact DPLS branding colors: Primary Blue, Bright Blue, Cyan, Light Blue
     const colors = [
-      "rgba(6, 182, 212, ",   // cyan
-      "rgba(16, 185, 129, ",  // emerald
-      "rgba(99, 102, 241, ",  // indigo
-      "rgba(45, 212, 191, ",  // teal
+      "rgba(37, 99, 235, ",   // #2563eb
+      "rgba(59, 130, 246, ",  // #3b82f6
+      "rgba(6, 182, 212, ",   // #06b6d4
+      "rgba(96, 165, 250, ",  // #60a5fa
     ];
 
     const initParticles = () => {
       particles = [];
-      const count = Math.min(Math.floor((width * height) / 14000), 90);
+      const count = Math.min(Math.floor((width * height) / 15000), 85);
       for (let i = 0; i < count; i++) {
         particles.push({
           x: Math.random() * width,
           y: Math.random() * height,
-          vx: (Math.random() - 0.5) * 0.45,
-          vy: (Math.random() - 0.5) * 0.45,
+          vx: (Math.random() - 0.5) * 0.4,
+          vy: (Math.random() - 0.5) * 0.4,
           radius: Math.random() * 1.8 + 0.8,
           baseAlpha: Math.random() * 0.4 + 0.2,
           color: colors[Math.floor(Math.random() * colors.length)],
@@ -83,14 +84,13 @@ export default function CanvasBackground() {
 
     const render = () => {
       time += 0.015;
-      // Smooth mouse interpolation
       mouse.x += (mouse.targetX - mouse.x) * 0.08;
       mouse.y += (mouse.targetY - mouse.y) * 0.08;
 
       ctx.clearRect(0, 0, width, height);
 
-      // Draw faint background grid
-      ctx.strokeStyle = "rgba(255, 255, 255, 0.018)";
+      // Subtle background grid aligned to Dev Pattern Labs theme
+      ctx.strokeStyle = "rgba(148, 163, 184, 0.025)";
       ctx.lineWidth = 1;
       const gridSize = 80;
       for (let x = 0; x < width; x += gridSize) {
@@ -106,62 +106,45 @@ export default function CanvasBackground() {
         ctx.stroke();
       }
 
-      // Update and draw particles
       for (let i = 0; i < particles.length; i++) {
         const p = particles[i];
-
-        // Move
         p.x += p.vx;
         p.y += p.vy;
 
-        // Bounce walls
-        if (p.x < 0) {
-          p.x = 0;
-          p.vx *= -1;
-        } else if (p.x > width) {
-          p.x = width;
-          p.vx *= -1;
-        }
-        if (p.y < 0) {
-          p.y = 0;
-          p.vy *= -1;
-        } else if (p.y > height) {
-          p.y = height;
-          p.vy *= -1;
-        }
+        if (p.x < 0) { p.x = 0; p.vx *= -1; }
+        else if (p.x > width) { p.x = width; p.vx *= -1; }
+        if (p.y < 0) { p.y = 0; p.vy *= -1; }
+        else if (p.y > height) { p.y = height; p.vy *= -1; }
 
-        // Mouse interaction: subtle gravitational attraction & repellent bubble
         const dx = mouse.x - p.x;
         const dy = mouse.y - p.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
+        const dist = Math.hypot(dx, dy);
         if (dist < mouse.radius) {
           const force = (1 - dist / mouse.radius) * 0.06;
           p.x -= dx * force;
           p.y -= dy * force;
         }
 
-        // Draw particle with gentle glow
         const alpha = p.baseAlpha + Math.sin(time * p.pulseSpeed + p.pulseOffset) * 0.15;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
         ctx.fillStyle = `${p.color}${Math.max(0.1, alpha)})`;
-        ctx.shadowColor = `${p.color}0.8)`;
+        ctx.shadowColor = `${p.color}0.7)`;
         ctx.shadowBlur = 8;
         ctx.fill();
-        ctx.shadowBlur = 0; // reset
+        ctx.shadowBlur = 0;
 
-        // Draw connective lines between close particles
         for (let j = i + 1; j < particles.length; j++) {
           const p2 = particles[j];
           const distNodes = Math.hypot(p.x - p2.x, p.y - p2.y);
-          const maxDist = 130;
+          const maxDist = 125;
 
           if (distNodes < maxDist) {
-            const lineAlpha = (1 - distNodes / maxDist) * 0.14;
+            const lineAlpha = (1 - distNodes / maxDist) * 0.15;
             ctx.beginPath();
             ctx.moveTo(p.x, p.y);
             ctx.lineTo(p2.x, p2.y);
-            ctx.strokeStyle = `rgba(14, 165, 233, ${lineAlpha})`;
+            ctx.strokeStyle = `rgba(59, 130, 246, ${lineAlpha})`;
             ctx.lineWidth = 0.8;
             ctx.stroke();
           }

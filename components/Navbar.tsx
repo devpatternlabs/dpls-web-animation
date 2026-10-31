@@ -1,37 +1,22 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { Terminal, Volume2, VolumeX, Menu, X, ArrowUpRight, Zap, Sparkles } from "lucide-react";
+import { Volume2, VolumeX, Menu, X, ArrowUpRight, ChevronDown, Sparkles } from "lucide-react";
 import { sound } from "@/lib/sound";
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [servicesDropdownOpen, setServicesDropdownOpen] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
   const [hoveredNav, setHoveredNav] = useState<string | null>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
-  const [currentTime, setCurrentTime] = useState("");
 
   useEffect(() => {
     setIsMuted(sound.getMuted());
-
-    const updateClock = () => {
-      const now = new Date();
-      // Format in IST (Tamil Nadu HQ)
-      const options: Intl.DateTimeFormatOptions = {
-        timeZone: "Asia/Kolkata",
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-        hour12: false,
-      };
-      setCurrentTime(new Intl.DateTimeFormat("en-GB", options).format(now) + " IST");
-    };
-
-    updateClock();
-    const interval = setInterval(updateClock, 1000);
 
     const handleScroll = () => {
       const totalScroll = document.documentElement.scrollHeight - window.innerHeight;
@@ -41,10 +26,7 @@ export default function Navbar() {
     };
 
     window.addEventListener("scroll", handleScroll);
-    return () => {
-      clearInterval(interval);
-      window.removeEventListener("scroll", handleScroll);
-    };
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const toggleSound = () => {
@@ -52,70 +34,121 @@ export default function Navbar() {
     setIsMuted(muted);
   };
 
-  const navLinks = [
-    { name: "Patterns", href: "#patterns" },
-    { name: "Why Us", href: "#comparison" },
-    { name: "14-Day Sprint", href: "#sprint" },
-    { name: "Pricing", href: "#pricing" },
-    { name: "FAQ", href: "#faq" },
+  const services = [
+    { name: "Web Development", desc: "Custom-built sites & apps", icon: "🖥️", href: "#services" },
+    { name: "WordPress Development", desc: "Flexible, maintainable builds", icon: "☁️", href: "#services" },
+    { name: "Next.js Development", desc: "Modern, performant apps", icon: "⚛️", href: "#services" },
+    { name: "Mobile App Development", desc: "Cross-platform mobile apps", icon: "📲", href: "#services" },
+    { name: "UI/UX Design", desc: "Clear, conversion-focused design", icon: "🎨", href: "#services" },
+    { name: "SEO Optimization", desc: "Technical & structured SEO", icon: "📈", href: "#services" },
+    { name: "AI & Automation", desc: "Workflow & process automation", icon: "🤖", href: "#services" },
+    { name: "Website Maintenance", desc: "Proactive care & support", icon: "🛡️", href: "#services" },
   ];
 
   return (
     <>
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          isScrolled ? "py-3" : "py-5"
+          isScrolled ? "py-2.5" : "py-4"
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ y: -20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
-            className="flex items-center justify-between px-4 sm:px-6 py-2.5 rounded-2xl bg-surface/80 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.5)] relative overflow-hidden"
+            transition={{ duration: 0.5, ease: "easeOut" }}
+            className="flex items-center justify-between px-4 sm:px-6 py-2 rounded-2xl bg-[#0c1226]/85 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.5)] relative overflow-visible"
           >
             {/* Scroll Progress Bar at the top of Navbar */}
             <div
-              className="absolute top-0 left-0 h-[2px] bg-gradient-to-r from-brand-cyan via-brand-emerald to-brand-indigo transition-all duration-100 ease-out"
+              className="absolute top-0 left-0 h-[2px] bg-gradient-to-r from-brand-primary via-brand-bright to-brand-cyan transition-all duration-100 ease-out"
               style={{ width: `${scrollProgress}%` }}
             />
 
-            {/* Brand Logo & Telemetry */}
-            <div className="flex items-center gap-4">
-              <Link
-                href="/"
-                className="flex items-center gap-3 group"
-                onMouseEnter={() => sound.playHover()}
-                onClick={() => sound.playClick()}
+            {/* Official Brand Logo */}
+            <Link
+              href="/"
+              className="flex items-center gap-3 group shrink-0"
+              onMouseEnter={() => sound.playHover()}
+              onClick={() => sound.playClick()}
+            >
+              <div className="relative w-10 h-10 sm:w-11 sm:h-11 rounded-xl p-[1px] group-hover:scale-105 transition-transform">
+                <Image
+                  src="/images/dev-pattern-labs-logo-icon.webp"
+                  alt="Dev Pattern Labs Logo"
+                  width={44}
+                  height={44}
+                  priority
+                  className="w-full h-full object-contain drop-shadow-[0_0_12px_rgba(59,130,246,0.5)]"
+                />
+              </div>
+
+              <div className="flex flex-col">
+                <span className="font-bold text-base sm:text-lg tracking-tight text-white font-sans">
+                  Dev Pattern<span className="text-brand-bright"> Labs</span>
+                </span>
+                <span className="text-[10px] tracking-wider text-slate-400 font-mono -mt-1 hidden sm:block">
+                  Web &amp; Digital Products
+                </span>
+              </div>
+            </Link>
+
+            {/* Desktop Navigation */}
+            <nav className="hidden lg:flex items-center gap-1 bg-white/[0.03] px-3 py-1 rounded-full border border-white/5">
+              {/* Services Dropdown */}
+              <div
+                className="relative"
+                onMouseEnter={() => setServicesDropdownOpen(true)}
+                onMouseLeave={() => setServicesDropdownOpen(false)}
               >
-                <div className="relative w-9 h-9 rounded-xl bg-gradient-to-br from-brand-cyan to-brand-emerald p-[1px] group-hover:shadow-[0_0_20px_rgba(6,182,212,0.6)] transition-shadow">
-                  <div className="w-full h-full bg-[#05070d] rounded-[11px] flex items-center justify-center">
-                    <Terminal className="w-4 h-4 text-brand-cyan group-hover:scale-110 transition-transform" />
-                  </div>
-                </div>
+                <button
+                  className="flex items-center gap-1 px-3.5 py-1.5 text-xs font-medium text-slate-300 hover:text-white transition-colors"
+                  onClick={() => setServicesDropdownOpen(!servicesDropdownOpen)}
+                >
+                  <span>Services</span>
+                  <ChevronDown className="w-3.5 h-3.5 text-slate-400 transition-transform group-hover:rotate-180" />
+                </button>
 
-                <div className="flex flex-col">
-                  <div className="flex items-center gap-2">
-                    <span className="font-bold text-sm tracking-tight text-white font-sans group-hover:text-brand-cyan transition-colors">
-                      Dev Pattern Labs
-                    </span>
-                    <span className="relative flex h-2 w-2">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2 text-[10px] font-mono text-slate-400">
-                    <span>Q4 SPRINT ACTIVE</span>
-                    <span className="text-slate-600">•</span>
-                    <span className="hidden sm:inline text-emerald-400/90">{currentTime}</span>
-                  </div>
-                </div>
-              </Link>
-            </div>
+                <AnimatePresence>
+                  {servicesDropdownOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 10 }}
+                      transition={{ duration: 0.2 }}
+                      className="absolute top-full left-0 w-80 p-3 rounded-2xl bg-[#0c1226]/95 backdrop-blur-2xl border border-white/10 shadow-2xl grid grid-cols-1 gap-1 z-50 mt-1"
+                    >
+                      {services.map((s) => (
+                        <a
+                          key={s.name}
+                          href={s.href}
+                          onClick={() => {
+                            setServicesDropdownOpen(false);
+                            sound.playClick();
+                          }}
+                          className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-white/[0.06] transition group"
+                        >
+                          <span className="text-lg">{s.icon}</span>
+                          <div>
+                            <div className="text-xs font-semibold text-white group-hover:text-brand-bright transition-colors">
+                              {s.name}
+                            </div>
+                            <div className="text-[11px] text-slate-400 font-light">{s.desc}</div>
+                          </div>
+                        </a>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
 
-            {/* Desktop Navigation Links */}
-            <nav className="hidden lg:flex items-center gap-1 bg-white/[0.03] px-2 py-1 rounded-full border border-white/5">
-              {navLinks.map((link) => (
+              {[
+                { name: "PostSprint", href: "#postsprint" },
+                { name: "Why Us", href: "#why-us" },
+                { name: "Work", href: "#work" },
+                { name: "Process", href: "#process" },
+                { name: "FAQ", href: "#faq" },
+              ].map((link) => (
                 <a
                   key={link.name}
                   href={link.href}
@@ -155,11 +188,11 @@ export default function Navbar() {
                   </>
                 ) : (
                   <>
-                    <Volume2 className="w-3.5 h-3.5 text-brand-cyan animate-pulse" />
+                    <Volume2 className="w-3.5 h-3.5 text-brand-bright animate-pulse" />
                     <div className="flex items-center gap-0.5 h-3">
-                      <span className="w-0.5 h-2 bg-brand-cyan animate-[bounce_0.6s_ease-in-out_infinite]"></span>
-                      <span className="w-0.5 h-3 bg-brand-emerald animate-[bounce_0.8s_ease-in-out_infinite_0.1s]"></span>
-                      <span className="w-0.5 h-1.5 bg-brand-indigo animate-[bounce_0.7s_ease-in-out_infinite_0.2s]"></span>
+                      <span className="w-0.5 h-2 bg-brand-primary animate-[bounce_0.6s_ease-in-out_infinite]"></span>
+                      <span className="w-0.5 h-3 bg-brand-bright animate-[bounce_0.8s_ease-in-out_infinite_0.1s]"></span>
+                      <span className="w-0.5 h-1.5 bg-brand-cyan animate-[bounce_0.7s_ease-in-out_infinite_0.2s]"></span>
                     </div>
                   </>
                 )}
@@ -167,12 +200,14 @@ export default function Navbar() {
 
               {/* Primary CTA */}
               <a
-                href="#audit"
+                href="#contact"
                 onMouseEnter={() => sound.playHover()}
                 onClick={() => sound.playClick()}
-                className="relative group inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-brand-cyan to-brand-emerald text-slate-950 font-bold text-xs shadow-[0_0_20px_rgba(6,182,212,0.3)] hover:shadow-[0_0_25px_rgba(16,185,129,0.5)] transition duration-300 transform hover:scale-[1.02] active:scale-[0.98]"
+                data-cursor="pointer"
+                data-cursor-text="PROJECT"
+                className="relative group inline-flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl bg-gradient-to-r from-brand-primary via-brand-bright to-brand-cyan text-white font-bold text-xs shadow-[0_0_20px_rgba(37,99,235,0.4)] hover:shadow-[0_0_30px_rgba(59,130,246,0.6)] transition duration-300 transform hover:scale-[1.02] active:scale-[0.98]"
               >
-                <span>Book 15-Min Audit</span>
+                <span>Start a Project</span>
                 <ArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
               </a>
 
@@ -196,15 +231,22 @@ export default function Navbar() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="fixed inset-x-0 top-20 z-40 p-4 lg:hidden"
+            className="fixed inset-x-0 top-20 z-40 p-4 lg:hidden max-h-[85vh] overflow-y-auto"
           >
-            <div className="p-6 rounded-3xl bg-surface/95 backdrop-blur-2xl border border-white/10 shadow-2xl space-y-4">
+            <div className="p-6 rounded-3xl bg-[#0c1226]/95 backdrop-blur-2xl border border-white/10 shadow-2xl space-y-4">
               <div className="flex justify-between items-center pb-3 border-b border-white/10 text-xs font-mono text-slate-400">
-                <span>NAVIGATION</span>
-                <span className="text-emerald-400">{currentTime}</span>
+                <span>DEV PATTERN LABS</span>
+                <span className="text-brand-bright">STUDIO NAV</span>
               </div>
               <div className="flex flex-col space-y-2">
-                {navLinks.map((link) => (
+                {[
+                  { name: "Services", href: "#services" },
+                  { name: "PostSprint (Studio)", href: "#postsprint" },
+                  { name: "Why Us", href: "#why-us" },
+                  { name: "Recent Work", href: "#work" },
+                  { name: "Our Process", href: "#process" },
+                  { name: "FAQ", href: "#faq" },
+                ].map((link) => (
                   <a
                     key={link.name}
                     href={link.href}
@@ -224,15 +266,15 @@ export default function Navbar() {
                   onClick={toggleSound}
                   className="flex items-center gap-2 text-xs font-mono text-slate-400 hover:text-white"
                 >
-                  {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4 text-brand-cyan" />}
-                  <span>UI SOUNDS: {isMuted ? "MUTED" : "ENABLED"}</span>
+                  {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4 text-brand-bright" />}
+                  <span>SFX: {isMuted ? "OFF" : "ON"}</span>
                 </button>
                 <a
-                  href="#audit"
+                  href="#contact"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="px-4 py-2 rounded-lg bg-brand-cyan text-slate-950 font-bold text-xs"
+                  className="px-4 py-2 rounded-lg bg-brand-bright text-white font-bold text-xs"
                 >
-                  Book Free Audit
+                  Start a Project
                 </a>
               </div>
             </div>

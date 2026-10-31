@@ -8,55 +8,41 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        background: "#05070d",
-        surface: "#0b101d",
-        "surface-card": "rgba(16, 24, 40, 0.7)",
-        "surface-border": "rgba(255, 255, 255, 0.08)",
+        background: "#070b1a",
+        "deep-navy": "#070b1a",
+        "navy-raise": "#0c1226",
+        "navy-card": "#101833",
+        "navy-line": "rgba(148, 163, 184, 0.16)",
         brand: {
+          primary: "#2563eb",
+          bright: "#3b82f6",
+          light: "#60a5fa",
           cyan: "#06b6d4",
-          teal: "#14b8a6",
-          emerald: "#10b981",
-          indigo: "#6366f1",
-          purple: "#a855f7",
+          slate: "#94a3b8",
         },
       },
       fontFamily: {
-        sans: ["var(--font-inter)", "sans-serif"],
+        sans: ["var(--font-poppins)", "sans-serif"],
         mono: ["var(--font-jetbrains)", "monospace"],
       },
       animation: {
         "pulse-glow": "pulseGlow 4s ease-in-out infinite",
         "float-slow": "float 8s ease-in-out infinite",
         "spin-slow": "spin 25s linear infinite",
-        "scan-line": "scanline 8s linear infinite",
-        "gradient-x": "gradientX 10s ease infinite",
       },
       keyframes: {
         pulseGlow: {
-          "0%, 100%": { opacity: "0.3", transform: "scale(1)" },
-          "50%": { opacity: "0.6", transform: "scale(1.05)" },
+          "0%, 100%": { opacity: "0.4", transform: "scale(1)" },
+          "50%": { opacity: "0.8", transform: "scale(1.05)" },
         },
         float: {
           "0%, 100%": { transform: "translateY(0px)" },
-          "50%": { transform: "translateY(-12px)" },
-        },
-        scanline: {
-          "0%": { transform: "translateY(-100%)" },
-          "100%": { transform: "translateY(1000%)" },
-        },
-        gradientX: {
-          "0%, 100%": {
-            "background-size": "200% 200%",
-            "background-position": "left center",
-          },
-          "50%": {
-            "background-size": "200% 200%",
-            "background-position": "right center",
-          },
+          "50%": { transform: "translateY(-10px)" },
         },
       },
       backgroundImage: {
-        "radial-glow": "radial-gradient(circle at 50% 50%, var(--tw-gradient-stops))",
+        "brand-gradient": "linear-gradient(135deg, #2563eb 0%, #3b82f6 55%, #06b6d4 100%)",
+        "card-gradient": "linear-gradient(180deg, rgba(16, 24, 51, 0.8) 0%, rgba(12, 18, 38, 0.95) 100%)",
       },
     },
   },
